@@ -1,4 +1,6 @@
-# obi-metrics-agent.py							@rmoff / March 2014
+# obi-metrics-agent.py							
+
+	@rmoff / March 2014
 
 ## LICENCE TO GO HERE
 
