@@ -3,7 +3,7 @@ sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/`uname -p`/epel-release-6-8
 
 # Install dependencies
 # Install packages through yum, including python. This won't overwrite the system's python version, but makes it available for use. 
-sudo yum install -y python-pip python-devel pycairo-devel bitmap-fonts httpd mod_wsgi mod_python git python-virtualenv
+sudo yum install -y python-pip python-devel pycairo-devel bitmap-fonts httpd mod_wsgi mod_python git python-virtualenv libffi libffi-devel
 
 # Using virtualenv, create a standalone Python 2.6 environment in which Graphite will run
 virtualenv /home/oracle/graphite
