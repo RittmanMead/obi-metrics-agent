@@ -1,9 +1,9 @@
 # Install the EPEL yum repository
-rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/`uname -p`/epel-release-6-8.noarch.rpm
+sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/`uname -p`/epel-release-6-8.noarch.rpm
 
 # Install dependencies
 # Install packages through yum, including python. This won't overwrite the system's python version, but makes it available for use. 
-sudo yum install -y python-devel bitmap-fonts httpd python-mod_wsgi mod_python git python-virtualenv cairo-devel libffi libffi-devel
+sudo yum install -y python-pip python-devel pycairo-devel bitmap-fonts httpd mod_wsgi mod_python git python-virtualenv
 
 # Using virtualenv, create a standalone Python 2.6 environment in which Graphite will run
 virtualenv /home/oracle/graphite
@@ -12,14 +12,6 @@ source /home/oracle/graphite/bin/activate
 # Install Python libraries
 pip install django django-tagging 'Twisted<12.0' pyparsing pytz cairocffi
 
-# Compile zope from source
-mkdir /home/oracle/zope-src/
-cd /home/oracle/zope-src/
-wget --no-check-certificate https://pypi.python.org/packages/source/z/zope.interface/zope.interface-4.1.0.tar.gz#md5=ac63de1784ea0327db876c908af07a94
-tar xf zope.interface-4.1.0.tar.gz
-cd zope.*
-python setup.py install --install-lib=/home/oracle/graphite/lib/python2.6/site-packages
-
 # Download and compile graphite and supporting components
 cd /home/oracle
 git clone https://github.com/graphite-project/graphite-web.git 
@@ -27,11 +19,12 @@ git clone https://github.com/graphite-project/carbon.git
 git clone https://github.com/graphite-project/whisper.git 
 git clone https://github.com/graphite-project/ceres.git 
 
-
 cd /home/oracle/graphite-web && python setup.py install --prefix=/home/oracle/graphite --install-lib=/home/oracle/graphite/lib
 cd /home/oracle/carbon && python setup.py install --prefix=/home/oracle/graphite --install-lib=/home/oracle/graphite/lib
 cd /home/oracle/whisper && python setup.py install --prefix=/home/oracle/graphite --install-lib=/home/oracle/graphite/lib
 cd /home/oracle/ceres && python setup.py install --prefix=/home/oracle/graphite --install-lib=/home/oracle/graphite/lib
+
+rm -rf carbon/ graphite-web/ whisper/ 
 
 # Two manual steps
 mkdir -p /home/oracle/graphite/storage/log/carbon-cache/carbon-cache-a  
