@@ -16,7 +16,7 @@ Regardless of the method chosen, there are some important assumptions made:
 	chmod u+x ./install-oel5.sh
 	./install-oel5.sh
 	
-This will do all the necessary setup for graphite, tested on SampleApp v309R2. It will take a good few minutes to run.
+This will do all the necessary setup for graphite, tested on SampleApp v309R2. It will take about five minutes to run. Once complete, go to `http://<server>` in your web browser to see the initial graphite page. 
 
 # Step by step installation
 
