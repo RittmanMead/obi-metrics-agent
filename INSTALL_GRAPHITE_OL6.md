@@ -69,6 +69,16 @@ Graphite can be installed using `pip` but I found better results by downloading 
 	mkdir -p /home/oracle/graphite/storage/log/carbon-cache/carbon-cache-a  
 	sudo cp /home/oracle/carbon/distro/redhat/init.d/carbon-cache /etc/init.d
 
+Enable carbon-cache to start at bootup
+
+	sed -i -e 's/^GRAPHITE_DIR.*$//g' /home/oracle/carbon/distro/redhat/init.d/carbon-cache
+	sed -i -e '/export PYTHONPATH/i export GRAPHITE_DIR="\/home\/oracle\/graphite"' /home/oracle/carbon/distro/redhat/init.d/carbon-cache
+	sed -i -e 's/chkconfig.*$/chkconfig: 345 95 20/g' /home/oracle/carbon/distro/redhat/init.d/carbon-cache
+
+	sudo cp /home/oracle/carbon/distro/redhat/init.d/carbon-cache /etc/init.d
+	sudo chmod 750 /etc/init.d/carbon-cache
+	sudo chkconfig --add carbon-cache
+
 Tidy up by removing the original git repositories from which the software was built
 
 	cd /home/oracle
