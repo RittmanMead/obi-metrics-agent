@@ -1,9 +1,24 @@
-# Installing Graphite on OEL5 / CentOS 5 / RHEL 5
+# Automagic installation of Graphite on OEL5 / CentOS 5 / RHEL 5
 
-## Assumptions
+You can either run the installation interactively, following the steps and explanations below, or download the full script to do it all automagically. 
 
+Regardless of the method chosen, there are some important assumptions made: 
+
+1. Server has internet access (try `ping google.com` to check)
+2. Installation is running as the `oracle` user
 1. Installation path is `/home/oracle/graphite`
 2. User has **sudo** rights
+
+
+**To download and run the automagic install script**, enter: 
+
+	wget --no-check-certificate https://raw.github.com/RittmanMead/obi-metrics-agent/master/install-oel5.sh
+	chmod u+x ./install-oel5.sh
+	./install-oel5.sh
+	
+This will do all the necessary setup for graphite, tested on SampleApp v309R2. It will take a good few minutes to run.
+
+# Step by step installation
 
 ## yum - package manager
 
