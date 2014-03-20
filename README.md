@@ -25,7 +25,9 @@ It features:
 * Parse data collected previously
 
 ### Which OBI metrics are collected?
-All of the ones that OPMN supports. Currently, BI Server and BI Presentation Services, plus the opmn process metrics (CPU time of each OBI component)
+All of the ones that OPMN supports. Currently, BI Server and BI Presentation Services, plus the opmn process metrics (such as CPU time of each OBI component)
+
+To explore the DMS metrics available, you can use Enterprise Manager, or the [DMS Spy](http://docs.oracle.com/cd/E15586_01/core.1111/e10108/monitor.htm#CFAHIAIB) servlet that is installed by default with OBIEE and available at `http://<obi-server>:7001/dms/` (assuming your AdminServer is on port 7001).
 
 ### How are the metrics collected? 
 Using the documented OPMN functionality to expose DMS metrics [`opmnctl metric op=query`](http://docs.oracle.com/cd/E14571_01/doc.1111/e14007/opmnctl.htm#CHDEFIDH) 
