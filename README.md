@@ -45,9 +45,10 @@ The patch for this issue is 13055259.
 
 Only single-node clusters are currently supported. Modification of the parsing code would  be necessary to handle additional instances. 
 
-### Where does obi-metrics-agent sit with Enterprise Manager? 
+### What about Enterprise Manager? 
 
-Enterprise Manager Fusion Middleware Control (that ships with all OBIEE installations) does not persist history of metrics, which obi-metrics-agent enables out of the box. Enterprise Manager Cloud Control (with the BI Management Pack) does enable history of DMS metrics to be collected, but requires additional licences. 
+Enterprise Manager Fusion Middleware Control (that ships with all OBIEE installations) does not retain history of metrics, which obi-metrics-agent enables out of the box. Enterprise Manager Cloud Control (with the BI Management Pack) does enable history of DMS metrics to be collected, but requires additional licences. 
+
 
 ## Installation 
 
