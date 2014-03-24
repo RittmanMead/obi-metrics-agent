@@ -2,10 +2,7 @@
 sudo sed -i.bak -e 's/proxy=/#proxy=/g' /etc/yum.conf
 
 # Install the EPEL yum repository
-cd /tmp
-wget http://mirror.bytemark.co.uk/fedora/epel/5/i386/epel-release-5-4.noarch.rpm
-sudo rpm -i epel-release-5-4.noarch.rpm
-rm epel-release-5-4.noarch.rpm
+sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm
 
 # Install dependencies
 # Install packages through yum, including python26. This won't overwrite the system's python version, but makes it available for use. 

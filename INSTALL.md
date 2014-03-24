@@ -1,22 +1,30 @@
 # Installing obi-metric-agent 
 
-## Installation on Linux
+There are three parts to the obi-metrics-agent installation. Only one of these is mandatory - the installation of obi-metrics-agent itself. 
+
+1. `obi-metrics-agent` - python script to extract DMS metrics from OBIEE
+2. `collectl` - OS metrics viewer. Can send data for graphing in Graphite
+3. Graphite - store and graph data, including that extracted from `obi-metrics-agent` and `collectl`
+
+## 1. Installing obi-metrics-agent
+
+### Installation on Linux
 
 *This assumes you are working in the same virtualenv as described in the graphite installation instructions ([OL5](INSTALL-GRAPHITE-OL5.md)/[OL6](INSTALL-GRAPHITE-OL6.md). If you are using a different python environment, you'll need to modify the `source` path.
 
-### Install XML lib
+#### Install XML lib
 
 	sudo yum install -y libxslt-devel
 	source /home/oracle/graphite/bin/activate
 	pip install lxml
 
-### Install obi-metrics-agent script
+#### Install obi-metrics-agent script
 
 	export FMW_HOME=/home/oracle/obiee # Change this value for your installation
 	cd $FMW_HOME
 	git clone https://github.com/RittmanMead/obi-metrics-agent.git
 	
-## Installation on Windows
+### Installation on Windows
 
 1. Using git, clone the github repository [https://github.com/RittmanMead/obi-metrics-agent.git](https://github.com/RittmanMead/obi-metrics-agent.git) or [download the python script directly](https://raw.github.com/RittmanMead/obi-metrics-agent/master/obi-metrics-agent.py)
 2. If not already, install Python:
@@ -26,7 +34,7 @@
 	* Windows x86: lxml-2.3.4.win32-py2.7.exe
 	* Windows x86-64: http://www.lfd.uci.edu/~gohlke/pythonlibs/eodybnto/lxml-2.3.6.win-amd64-py2.7.exe
 
-## Testing obi-metrics-agent
+### Testing obi-metrics-agent
 
 Assuming the OBIEE stack is running, the following should succeed: 
 
@@ -55,9 +63,37 @@ Expected output:
 		-- Sleeping for 5 seconds (until 1395268062)--
 	[...]
 
-## Installing Graphite
+## 2. Installing collectl [optional]
+
+`collectl` is an OS monitoring / metrics collection tool. To install on OL5/6 simply run: 
+
+	sudo yum install -y collectl
+
+Once installed, you can enter `collectl` to run it interactively. Alternatively you can set `collectl` to start automatically at boot time, where it will write its data to /var/log/collectl from where you can analyse it at your leisure
+
+	sudo chkconfig --level 35 collectl on
+
+To start collectl as a daemon manually: 
+
+	sudo service collectl start
+
+To configure it as a daemon (background process) to continually send OS data to graphite/carbon, amend amend the collectl configuration file:
+
+	sudo sed -i.bak -e 's/DaemonCommands/#DaemonCommands/g' /etc/collectl.conf
+	sudo sed -i -e '/DaemonCommands/a DaemonCommands = -f \/var\/log\/collectl -P -m -scdmnCDZ --export graphite,localhost:2003,p=.os.,s=cdmnCDZ' /etc/collectl.conf
+
+Optionally, set to collect every five seconds: 
+
+	sudo sed -i -e '/#Interval =     10/a Interval = 5' /etc/collectl.conf
+
+Extensive documentation about collectl, including additional configuration information and example usage, can be found on [the collectl homepage](http://collectl.sourceforge.net/)
+
+
+## 3. Installing Graphite [optional]
 
 Graphite is an open-source graphing tool, incorporating its own database. You don't have to install Graphite to use obi-metrics-agent but it is a very good way to easily visualise the data that you collect. If you want to install it there are fully automated installation scripts, along with installation walk-throughs, provided. Details vary slightly depending on the version of your OS:
+
+[[ Put here how to clone the git repo and run the installer script ]]
 
 * [Oracle Linux 5](INSTALL_GRAPHITE_OL5.md) (including Cent OS 5 and RHEL 5)
 * [Oracle Linux 6](INSTALL_GRAPHITE_OL5.md) (including Cent OS 6 and RHEL 6)
