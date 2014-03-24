@@ -53,7 +53,7 @@ Conversely, if you are on a network where `yum` needs to use a proxy, here is wh
 
 Several packages used for setting up the environment (eg. git, libffi, virtualenv) are in the **Extra Packages for Enterprise Linux** (EPEL) repository, so you need to add this to the `yum` repository list first. Do this as follows: 
 
-	sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm
+	sudo rpm -Uvh http://mirror.bytemark.co.uk/fedora/epel/5/i386/epel-release-5-4.noarch.rpm
 	
 ## Install dependencies
 

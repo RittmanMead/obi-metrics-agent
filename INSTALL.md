@@ -5,25 +5,44 @@ There are three parts to the obi-metrics-agent installation. Only one of these i
 1. `obi-metrics-agent` - python script to extract DMS metrics from OBIEE
 2. `collectl` - OS metrics viewer. Can send data for graphing in Graphite
 3. Graphite - store and graph data, including that extracted from `obi-metrics-agent` and `collectl`
+4. You have the EPEL yum repository setup (for packages such as git, etc): 
+	* OL 5/Cent OS 5/RHEL 5  (including SampleApp v309R2):
+
+			sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm
+	* OL 6/Cent OS 6/RHEL 6:
+
+			sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/`uname -p`/epel-release-6-8.noarch.rpm
+
+## Installation from script
+
+[[TODO / see blog post]] 
 
 ## 1. Installing obi-metrics-agent
 
+**obi-metrics-agent** just requires python (minimum 2.4), and the lxml library. 
+
 ### Installation on Linux
 
-*This assumes you are working in the same virtualenv as described in the graphite installation instructions ([OL5](INSTALL-GRAPHITE-OL5.md)/[OL6](INSTALL-GRAPHITE-OL6.md). If you are using a different python environment, you'll need to modify the `source` path.
+####  Install XML lib
 
-#### Install XML lib
+**obi-metrics-agent** needs the lxml library, which can be installed as follows:
 
-	sudo yum install -y libxslt-devel
-	source /home/oracle/graphite/bin/activate
-	pip install lxml
+	sudo yum install -y libxslt-devel python-setuptools
+	sudo easy_install lxml
 
 #### Install obi-metrics-agent script
 
+**obi-metrics-agent** is downloaded by cloning the git repository. This will bring in the python script itself, documentation and the installation scripts for graphite (see below)
+
+On Linux, do the following, setting the value for `FMW_HOME` accordingly: 
+
+	sudo yum install -y git
 	export FMW_HOME=/home/oracle/obiee # Change this value for your installation
 	cd $FMW_HOME
 	git clone https://github.com/RittmanMead/obi-metrics-agent.git
-	
+
+This will install git (if not present), and create a folder called **obi-metrics-agent** in the installation folder of OBIEE (FMW Home). You can put obi-metrics-agent wherever you want, this locating is just a suggestion. 
+
 ### Installation on Windows
 
 1. Using git, clone the github repository [https://github.com/RittmanMead/obi-metrics-agent.git](https://github.com/RittmanMead/obi-metrics-agent.git) or [download the python script directly](https://raw.github.com/RittmanMead/obi-metrics-agent/master/obi-metrics-agent.py)
@@ -91,9 +110,22 @@ Extensive documentation about collectl, including additional configuration infor
 
 ## 3. Installing Graphite [optional]
 
-Graphite is an open-source graphing tool, incorporating its own database. You don't have to install Graphite to use obi-metrics-agent but it is a very good way to easily visualise the data that you collect. If you want to install it there are fully automated installation scripts, along with installation walk-throughs, provided. Details vary slightly depending on the version of your OS:
+Graphite is an open-source graphing tool, incorporating its own database. You don’t have to install Graphite to use obi-metrics-agent but it is a very good way to easily visualise the data that you collect. If you want to install it there are fully automated installation scripts, along with installation walk-throughs, provided. Details vary slightly depending on the version of your OS. Do note that Graphite is somewhat notorious for installation problems, so whilst these instructions have been tested, you may hit quirks on your own server that may need a bit of Google-Fu to resolve.
 
-[[ Put here how to clone the git repo and run the installer script ]]
+Assuming you have cloned the obi-metrics-agent GitHub repository as shown above, then to run the graphite installation script run the following:
+
+	export FMW_HOME=/home/oracle/obiee # Change this value for your installation
+	cd $FMW_HOME/obi-metrics-agent
+	./install-graphite-ol5.sh
+
+If you’re on OL6 then simply run `install-graphite-ol6.sh` instead.
+
+The installation script takes about 5 minutes to run.
+
+If you want to follow step-by-step instructions detailing each step, they are provided:
 
 * [Oracle Linux 5](INSTALL_GRAPHITE_OL5.md) (including Cent OS 5 and RHEL 5)
 * [Oracle Linux 6](INSTALL_GRAPHITE_OL5.md) (including Cent OS 6 and RHEL 6)
+
+If you’re on a different *nix platform then feel free to adapt the install scripts and submit a pull request. Graphite works flawlessly on Debian-based distributions, and there is no reason why you should run it local to the OBIEE server on which obi-metrics-agent is running.
+
