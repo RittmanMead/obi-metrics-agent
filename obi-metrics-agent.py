@@ -376,7 +376,12 @@ if do_output_carbon and (CARBON_SERVER is None):
 	sys.exit()
 
 # Print header and variable states
-print '\n\n\t\tobi-metrics-agent.py\n\n\n[[ LICENCE TO GO HERE ]] \n\r@rmoff / March 2014\n\n'
+print '\n\n\t\tobi-metrics-agent.py\n\n\n'
+print '# ==================================================================='
+print '# Developed by @rmoff / Rittman Mead (http://www.rittmanmead.com)'
+print '# Absolutely no warranty, use at your own risk'
+print '# Please include this notice in any copy or reuse of the script you make'
+print '# ==================================================================='
 print '\n\n---------------------------------------'
 print 'Output format             : %s' % output
 print 'raw/csv/xml/carbon/sql    : %s/%s/%s/%s/%s' % (do_output_raw,do_output_csv,do_output_xml,do_output_carbon,do_output_sql)
