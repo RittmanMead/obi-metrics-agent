@@ -72,9 +72,9 @@ def parse_xml(xml):
 			for n1 in root.statistics.noun[0].noun:
 				group = (n1.attrib['type'] + "." + n1.attrib['name'])
 				for metric in n1.metric:
-					metric_name = metric.attrib['name'].replace('.value','').replace('.','').replace('/','-')
+					metric_name = metric.attrib['name'].replace('.value','').replace('.','').replace('/','-').replace('(','').replace(')','')
 					metric_value= metric.value
-					metric_full_name = (host + ".OBI." + group + "." + metric_name).replace(' ','_')
+					metric_full_name = (host + ".OBI." + group + "." + metric_name).replace(' ','_').replace('(','').replace(')','')
 					metric_out = metric_full_name + " " + str(metric_value) + " " + str(ts_epoch)
 					metrics_list.append((metric_full_name, str(metric_value) , str(ts_epoch)))
 					metrics_msg.append(metric_out)
