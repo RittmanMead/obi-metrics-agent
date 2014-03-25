@@ -1,7 +1,3 @@
-export FMW_HOME=/home/oracle/obiee # Change this value for your installation
-
-# Fix SampleApp yum proxy
-sudo sed -i.bak -e 's/proxy=/#proxy=/g' /etc/yum.conf
 # Set up EPEL
 sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm
 # Install LXML etc
