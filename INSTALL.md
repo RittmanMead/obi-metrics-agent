@@ -8,7 +8,7 @@ There are three parts to the obi-metrics-agent installation. Only one of these i
 4. You have the EPEL yum repository setup (for packages such as git, etc): 
 	* OL 5/Cent OS 5/RHEL 5  (including SampleApp v309R2):
 
-			sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm
+			sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm
 	* OL 6/Cent OS 6/RHEL 6:
 
 			sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/`uname -p`/epel-release-6-8.noarch.rpm

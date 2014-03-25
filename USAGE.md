@@ -21,7 +21,30 @@
 
 ## Syntax
 
-[[Syntax]]
+	Options:
+	  -h, --help            show this help message and exit
+	  -o OUTPUTFORMAT, --output=OUTPUTFORMAT
+				The output format(s) of data, comma separated. More
+				than one can be specified. Unparsed options: raw, xml
+				Parsed options: csv , carbon, sql
+	  -d LTPMA_DATA, --data-directory=LTPMA_DATA
+				The directory to which data files are written. Not
+				needed if sole output is carbon.
+	  -p, --parse-only      If specified, then all raw and xml files specified in
+				the data-directory will be processed, and output to
+				the specified format(s) Selecting this option will
+				disable collection of metrics.
+	  --fmw-instance=FMW_INSTANCE
+				Optional. The name of a particular FMW instance. This
+				will be prefixed to metric names.
+	  --carbon-server=CARBON_SERVER
+				The host or IP address of the Carbon server. Required
+				if output format 'carbon' specified.
+	  --carbon-port=CARBON_PORT
+				Alternative carbon port, if not 2003.
+	  -i INTERVAL, --interval=INTERVAL
+				The interval in seconds between metric samples.
+	  --opmnbin=OPMN_BIN    The complete path to opmnctl. Watch out for spaces.
 
 ## Example usage
 
