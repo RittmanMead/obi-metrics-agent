@@ -1,7 +1,7 @@
 # Set up EPEL
 sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm
 # Install LXML etc
-sudo yum install -y libxslt-devel python-setuptools git
+sudo yum install -y libxslt-devel python-setuptools git python-devel
 sudo easy_install lxml
 
 # Install Graphite
