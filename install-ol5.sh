@@ -9,8 +9,8 @@ sudo easy_install lxml
 
 # Install and configure collectl
 sudo yum install -y collectl
-sudo chkconfig --level 35 collectl on
+sudo /sbin/chkconfig --level 35 collectl on
 sudo sed -i.bak -e 's/DaemonCommands/#DaemonCommands/g' /etc/collectl.conf
 sudo sed -i -e '/DaemonCommands/a DaemonCommands = -f \/var\/log\/collectl -P -m -scdmnCDZ --export graphite,localhost:2003,p=.os.,s=cdmnCDZ' /etc/collectl.conf
 sudo sed -i -e '/#Interval =     10/a Interval = 5' /etc/collectl.conf
-sudo service collectl restart
+sudo /sbin/service collectl restart

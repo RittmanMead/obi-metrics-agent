@@ -130,7 +130,7 @@ PYTHONPATH=/home/oracle/graphite/lib/ /home/oracle/graphite/bin/django-admin.py 
 # Start Apache
 
 chmod -R o+rwx /home/oracle/graphite
-sudo service httpd restart
+sudo /sbin/service httpd restart
 
 echo 'You should now be able to go to one of the following IPs to see the initial graphite web page' 
-echo $(ip a|grep inet|grep -v 127.0.0.1|awk '{gsub("/24","");print "http://"$2}')
+echo $(/sbin/ip a|grep inet|grep -v 127.0.0.1|awk '{gsub("/24","");print "http://"$2}')
