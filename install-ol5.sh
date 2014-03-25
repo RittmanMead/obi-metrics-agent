@@ -7,9 +7,6 @@ sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarc
 # Install LXML etc
 sudo yum install -y libxslt-devel python-setuptools git
 sudo easy_install lxml
-# Clone obi-metrics-agent repository to FMW home
-cd $FMW_HOME
-git clone https://github.com/RittmanMead/obi-metrics-agent.git
 
 # Install Graphite
 ./install-graphite-ol5.sh
