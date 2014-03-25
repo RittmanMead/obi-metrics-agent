@@ -5,7 +5,11 @@
 # @rmoff / March 2014
 # Inspired by Venkat's original java implementation
 #
-# [[ LICENCE HERE ]]
+# ===================================================================
+# Developed by @rmoff / Rittman Mead (http://www.rittmanmead.com)
+# Absolutely no warranty, use at your own risk
+# Please include this notice in any copy or reuse of the script you make
+# ===================================================================#
 #
 # -------------------------------------------------
 # Purpose: 
@@ -315,7 +319,7 @@ opmn_cmds = ['coreapplication_obips1' ,'coreapplication_obis1','opmn']
 opts = OptionParser()
 opts.description = "obi-metrics-agent will can extract metric data from Fusion MiddleWare (FMW) and its Dynamic Monitoring Systems (DMS).\nIt will poll at a predefined interval and parse the resulting set of metrics.\nThe metrics can be output to a variety of formats, including CSV. Sending to Carbon is also supported, from where graphs can be rendered in Graphite."
 # epilog doesn't display, why?
-opts.epilog = ("obi-metrics-agent is (c) RittmanMead Limited and may not be used without permission")
+opts.epilog = ("Developed by @rmoff / Rittman Mead (http://www.rittmanmead.com)           Absolutely no warranty, use at your own risk                                         Please include this notice in any copy or reuse of the script you make ")
 opts.add_option("-o","--output",action="store",dest="outputformat",default="csv",help="The output format(s) of data, comma separated. More than one can be specified.\nUnparsed options: raw, xml\nParsed options: csv , carbon, sql")
 opts.add_option("-d","--data-directory",action="store",dest="LTPMA_DATA",default="./data",help="The directory to which data files are written. Not needed if sole output is carbon.")
 opts.add_option("-p","--parse-only",action="store_true",dest="parse_only",default=False, help="If specified, then all raw and xml files specified in the data-directory will be processed, and output to the specified format(s)\nSelecting this option will disable collection of metrics.")
