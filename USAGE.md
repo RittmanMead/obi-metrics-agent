@@ -27,7 +27,7 @@
 				The output format(s) of data, comma separated. More
 				than one can be specified. Unparsed options: raw, xml
 				Parsed options: csv , carbon, sql
-	  -d LTPMA_DATA, --data-directory=LTPMA_DATA
+	  -d DATA, --data-directory=DATA
 				The directory to which data files are written. Not
 				needed if sole output is carbon.
 	  -p, --parse-only      If specified, then all raw and xml files specified in

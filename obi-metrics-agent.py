@@ -130,7 +130,7 @@ def parse_xml(xml):
 		invalid_xml += 1
 		sys.stderr.write('\t**Error parsing metric data: %s\n' % str(err))
 		try:
-			file = open('%s/invalid_files.txt' % (LTPMA_DATA),'a')
+			file = open('%s/invalid_files.txt' % (DATA),'a')
 			file.write(filename + '\n')
 			file.close()
 		except:
@@ -144,7 +144,7 @@ def parse_xml(xml):
 		# Do something with the data
 		if do_output_csv:
 			csvline = '\n'.join(metrics_msg).replace(' ',',') + '\n'
-			csvfile = open('%s/metrics.csv' % (LTPMA_DATA),'a')
+			csvfile = open('%s/metrics.csv' % (DATA),'a')
 			csvfile.write(csvline)
 			print '\t\t\tAppended CSV data to %s' % (csvfile.name)
 			csvfile.close()
@@ -169,7 +169,7 @@ def parse_xml(xml):
 				for line in metrics_list:
 					metr,value,ts = line
 					sql += "INSERT INTO OBI_METRICS (METRIC,VALUE,TIME_EPOCH) VALUES('%s',%d,%d);\n" % (metr,int(value),int(ts))
-				sqlfile = open('%s/inserts.sql' % (LTPMA_DATA),'a')
+				sqlfile = open('%s/inserts.sql' % (DATA),'a')
 				sqlfile.write(sql)
 				print '\t\t\tWritten SQL INSERT statement to %s' % (sqlfile.name)
 				sqlfile.close()
@@ -218,11 +218,11 @@ def collect_metrics():
 
 			# Call the opmn command
 			if do_output_raw:
-				filename='%s/%s_%d.raw' % (LTPMA_DATA,component,thisTime)
+				filename='%s/%s_%d.raw' % (DATA,component,thisTime)
 			else:
 # Need to make this cross-platform
 #				filename='/dev/shm/obimetric.tmp'
-				filename='%s/data.raw' % (LTPMA_DATA)
+				filename='%s/data.raw' % (DATA)
 			print '\tGet metrics for %s' % (component)
 			raw = get_metrics(cmd,filename)
 			if len(raw) < 100:
@@ -234,7 +234,7 @@ def collect_metrics():
 			xml=raw[101:]
 			if do_output_xml:
 				# dump XML to file
-				filename='%s/%s_%d.xml' % (LTPMA_DATA,component,thisTime)
+				filename='%s/%s_%d.xml' % (DATA,component,thisTime)
 				xml_file=open(filename,'w')
 				xml_file.write(xml)
 				xml_file.close()
@@ -258,7 +258,7 @@ def collect_metrics():
 
 def parse_files():
 	# How to express raw OR xml in a single regex? would need to cater for raw files and stripping header, but rest of code could be combined
-	base_path = '%s%s' % (LTPMA_DATA,os.sep)
+	base_path = '%s%s' % (DATA,os.sep)
 
 	raw_files_path = base_path + '*.raw'
 	raw_files = glob(raw_files_path)
@@ -321,7 +321,7 @@ opts.description = "obi-metrics-agent will can extract metric data from Fusion M
 # epilog doesn't display, why?
 opts.epilog = ("Developed by @rmoff / Rittman Mead (http://www.rittmanmead.com)           Absolutely no warranty, use at your own risk                                         Please include this notice in any copy or reuse of the script you make ")
 opts.add_option("-o","--output",action="store",dest="outputformat",default="csv",help="The output format(s) of data, comma separated. More than one can be specified.\nUnparsed options: raw, xml\nParsed options: csv , carbon, sql")
-opts.add_option("-d","--data-directory",action="store",dest="LTPMA_DATA",default="./data",help="The directory to which data files are written. Not needed if sole output is carbon.")
+opts.add_option("-d","--data-directory",action="store",dest="DATA",default="./data",help="The directory to which data files are written. Not needed if sole output is carbon.")
 opts.add_option("-p","--parse-only",action="store_true",dest="parse_only",default=False, help="If specified, then all raw and xml files specified in the data-directory will be processed, and output to the specified format(s)\nSelecting this option will disable collection of metrics.")
 opts.add_option("--fmw-instance",action="store",dest="FMW_INSTANCE",help="Optional. The name of a particular FMW instance. This will be prefixed to metric names.")
 opts.add_option("--carbon-server",action="store",dest="CARBON_SERVER",help="The host or IP address of the Carbon server. Required if output format 'carbon' specified.")
@@ -335,7 +335,7 @@ try:
 	interval = int(input_opts.interval)
 	output=input_opts.outputformat
 	parse_only= input_opts.parse_only
-	LTPMA_DATA = input_opts.LTPMA_DATA
+	DATA = input_opts.DATA
 	FMW_INSTANCE = input_opts.FMW_INSTANCE
 	CARBON_SERVER = input_opts.CARBON_SERVER
 	CARBON_PORT = int(input_opts.CARBON_PORT)
@@ -380,7 +380,7 @@ print '\n\n\t\tobi-metrics-agent.py\n\n\n[[ LICENCE TO GO HERE ]] \n\r@rmoff / M
 print '\n\n---------------------------------------'
 print 'Output format             : %s' % output
 print 'raw/csv/xml/carbon/sql    : %s/%s/%s/%s/%s' % (do_output_raw,do_output_csv,do_output_xml,do_output_carbon,do_output_sql)
-print 'Data dir                  : %s' % LTPMA_DATA
+print 'Data dir                  : %s' % DATA
 print 'FMW instance              : %s' % FMW_INSTANCE
 print 'OPMN BIN                  : %s' % OPMN_BIN
 if do_output_carbon:
@@ -392,9 +392,9 @@ else:
 	print 'Sample interval (seconds) : %d' % interval
 print '---------------------------------------\n'
 
-if not os.path.exists(LTPMA_DATA):
-	print '\n\t%s does not exist ... creating' % (LTPMA_DATA)
-	os.makedirs(LTPMA_DATA)
+if not os.path.exists(DATA):
+	print '\n\t%s does not exist ... creating' % (DATA)
+	os.makedirs(DATA)
 
 # Check process list for collectl?
 # print '\n\n   **Don''t forget to start collectl**'
