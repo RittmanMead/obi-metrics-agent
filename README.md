@@ -10,4 +10,4 @@
 
 **obi-metrics-agent** is a tool that extracts OBIEE's performance metrics from the [Dynamic Monitoring Service (**DMS**)](http://docs.oracle.com/cd/E23943_01/core.1111/e10108/dms.htm#CIHCFIFA) functionality. 
 
-For more details, see the Rittman Mead blog. 
+For more details, see http://ritt.md/oma-intro
