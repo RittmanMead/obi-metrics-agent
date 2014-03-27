@@ -25,11 +25,9 @@ cd /home/oracle/whisper && python setup.py install --prefix=/home/oracle/graphit
 cd /home/oracle/ceres && python setup.py install --prefix=/home/oracle/graphite --install-lib=/home/oracle/graphite/lib
 
 cd /home/oracle
-rm -rf carbon/ graphite-web/ whisper/ 
 
 # Two manual steps
 mkdir -p /home/oracle/graphite/storage/log/carbon-cache/carbon-cache-a  
-sudo cp /home/oracle/carbon/distro/redhat/init.d/carbon-cache /etc/init.d
 
 # Enable carbon-cache to start at bootup
 sed -i -e 's/^GRAPHITE_DIR.*$//g' /home/oracle/carbon/distro/redhat/init.d/carbon-cache
