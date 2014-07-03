@@ -1,8 +1,10 @@
 # Install the EPEL yum repository
 sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/`uname -p`/epel-release-6-8.noarch.rpm
 
-# Install dependencies
 # Install packages through yum
+# NB if you get Error:  Multilib version problems found
+#               Protected multilib versions: pixman-0.26.2-5.el6_4.i686 != pixman-0.26.2-5.1.el6_5.x86_64
+# on SampleAppv406, first run sudo yum remove pixman
 sudo yum install -y python-pip python-devel pycairo-devel bitmap-fonts httpd mod_wsgi mod_python git python-virtualenv libffi libffi-devel
 
 # Using virtualenv, create a standalone environment in which Graphite will run
@@ -67,6 +69,7 @@ sudo mkdir -p /etc/httpd/wsgi
 cp /home/oracle/graphite/conf/graphite.wsgi.example /home/oracle/graphite/conf/graphite.wsgi
 # This needs to match whatever --install-lib was set to when running setup.py install for graphite-web 
 sed -i -e 's/\/opt\/graphite\/webapp/\/home\/oracle\/graphite\/lib/' /home/oracle/graphite/conf/graphite.wsgi
+sed -i -e "/^sys.path.append/a sys.path.append('\/home\/oracle\/graphite\/lib\/python2.6\/site-packages\/')"  /home/oracle/graphite/conf/graphite.wsgi
 
 # Frig permissions so apache can access the webapp
 chmod o+rx /home/oracle

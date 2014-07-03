@@ -120,6 +120,7 @@ If it's not, check in `/home/oracle/graphite/storage/log/carbon-cache/carbon-cac
 	cp /home/oracle/graphite/conf/graphite.wsgi.example /home/oracle/graphite/conf/graphite.wsgi
 	# This needs to match whatever --install-lib was set to when running setup.py install for graphite-web 
 	sed -i -e 's/\/opt\/graphite\/webapp/\/home\/oracle\/graphite\/lib/' /home/oracle/graphite/conf/graphite.wsgi
+	sed -i -e "/^sys.path.append/a sys.path.append('\/home\/oracle\/graphite\/lib\/python2.6\/site-packages\/')"  /home/oracle/graphite/conf/graphite.wsgi
 
 	# Frig permissions so apache can access the webapp
 	chmod o+rx /home/oracle
