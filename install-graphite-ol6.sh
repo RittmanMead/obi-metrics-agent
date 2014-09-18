@@ -12,7 +12,7 @@ virtualenv /home/oracle/graphite
 source /home/oracle/graphite/bin/activate
 
 # Install Python libraries
-pip install django django-tagging 'Twisted<12.0' pyparsing pytz cairocffi
+pip install django==1.6.2 django-tagging 'Twisted<12.0' pyparsing pytz cairocffi
 
 # Download and compile graphite and supporting components
 cd /home/oracle
