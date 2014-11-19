@@ -166,6 +166,13 @@ If it's not, check in `/home/oracle/graphite/storage/log/carbon-cache/carbon-cac
 	cd /home/oracle/graphite/lib/
 	PYTHONPATH=/home/oracle/graphite/lib/ /home/oracle/graphite/bin/django-admin.py syncdb --noinput --settings=graphite.settings --verbosity=3
 
+	# Set up the static content files
+	# RNM 20141119 - this is a hack, not sure if it's the proper way to do it
+	cd /home/oracle/graphite
+	cp -r webapp/content lib
+	PYTHONPATH=/home/oracle/graphite/lib/ /home/oracle/graphite/bin/django-admin.py collectstatic --noinput --settings=graphite.settings
+
+
 ## Start Apache
 
 The first time after running the setup step above (`django-admin.py`) you need to fix the permissions once more: 
