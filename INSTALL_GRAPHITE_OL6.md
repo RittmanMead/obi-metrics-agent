@@ -12,7 +12,9 @@ Regardless of the method chosen, there are some important assumptions made:
 **To download and run the automagic install script**, enter: 
 
 	wget --no-check-certificate https://raw.github.com/RittmanMead/obi-metrics-agent/master/install-ol6.sh
+	wget --no-check-certificate https://raw.github.com/RittmanMead/obi-metrics-agent/master/install-graphite-ol6.sh
 	chmod u+x ./install-ol6.sh
+	chmod u+x ./install-graphite-ol6.sh
 	./install-ol6.sh
 	
 This will do all the necessary setup for graphite. It will take about five minutes to run. Once complete, go to `http://<server>` in your web browser to see the initial graphite page. 
