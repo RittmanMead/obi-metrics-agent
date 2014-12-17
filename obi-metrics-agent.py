@@ -44,6 +44,8 @@ import os
 import sys
 import subprocess
 import socket
+import datetime
+import platform
 from glob import glob
 from optparse import OptionParser
 from lxml import objectify
@@ -63,7 +65,14 @@ def parse_xml(xml):
 		header_process_name = root.attrib['name']
 		ts_epoch_msec = root.attrib['timestamp']
 		ts_epoch = int(ts_epoch_msec)/ 1000
+		
+		#Check if platform is windows. If it is, adjust ts_epoch as windows uses Jan 01, 1601 as epoch
+		if (platform.system() == 'Windows') :
+			epoch_delta = (datetime.datetime(1970,1,1) - datetime.datetime(1601,1,1)).total_seconds()
+			ts_epoch = ts_epoch - epoch_delta
+		
 		ts= time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(ts_epoch))
+		
 
 		if (header_process_name == 'Oracle BI Server' or header_process_name == 'Oracle BI Presentation Server') :
 			# Assumption is that this is a BIS or BIPS pdml file
@@ -252,7 +261,7 @@ def collect_metrics():
 
 		if do_output_sql or do_output_carbon or do_output_csv:
 			print '\n\tProcessed: %d\tValid: %d (%0.2f%%)\tInvalid: %d (%0.2f%%)' % (total_xml,valid_xml,perc_valid_xml,invalid_xml,perc_invalid_xml)
-		print '\t-- Sleeping for %d seconds (until %d)--' % (interval,time.time())
+		print '\t-- Sleeping for %d seconds (until %d)--' % (interval,nextTime)
 		while nextTime > time.time():
 			time.sleep((nextTime-time.time()))
 
