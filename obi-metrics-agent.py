@@ -148,14 +148,16 @@ def parse_xml(xml):
 
 	valid_xml += 1
 	# more output conditions here - reformat into CSV (easy) and INSERT statements (not so easy)
-	print '\t\t Processed : \t%d data values @ %s \t%s' % (len(metrics_msg),ts,header_process_name)
+	if debug:
+		print '\t\t Processed : \t%d data values @ %s \t%s' % (len(metrics_msg),ts,header_process_name)
 	if (len(metrics_msg) > 0) :
 		# Do something with the data
 		if do_output_csv:
 			csvline = '\n'.join(metrics_msg).replace(' ',',') + '\n'
 			csvfile = open('%s/metrics.csv' % (DATA),'a')
 			csvfile.write(csvline)
-			print '\t\t\tAppended CSV data to %s' % (csvfile.name)
+			if debug:
+				print '\t\t\tAppended CSV data to %s' % (csvfile.name)
 			csvfile.close()
 		if do_output_carbon:
 			try:
@@ -168,7 +170,8 @@ def parse_xml(xml):
 				#print 'Sending message to carbon server %s' % (CARBON_SERVER)
 				sock.sendall(carbon_message)
 				sock.close()
-				print '\t\t\tSent data to Carbon at %s' % (CARBON_SERVER)
+				if debug:
+					print '\t\t\tSent data to Carbon at %s' % (CARBON_SERVER)
 			except Exception, err:
 				sys.stderr.write('\t**Error sending data to Carbon: %s\n' % str(err))
 		if do_output_sql:
@@ -220,8 +223,9 @@ def collect_metrics():
 	while True:
 		thisTime = time.time()
 		nextTime = thisTime + interval
-		print '\n--Gather metrics--'
-		print "\tTime of sample: %s (%d)\n " % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(thisTime)),thisTime)
+		if debug:
+			print '\n--Gather metrics--'
+			print "\tTime of sample: %s (%d)\n " % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(thisTime)),thisTime)
 		for cmd in opmn_cmds:
 			component=cmd
 
@@ -232,7 +236,8 @@ def collect_metrics():
 # Need to make this cross-platform
 #				filename='/dev/shm/obimetric.tmp'
 				filename='%s/data.raw' % (DATA)
-			print '\tGet metrics for %s' % (component)
+			if debug:
+				print '\tGet metrics for %s' % (component)
 			raw = get_metrics(cmd,filename)
 			if len(raw) < 100:
 				print '\n\t ** Output returned from opmn is unexpectedly short, is there a problem? Output follows: \n\t\t%s' % (raw)
@@ -260,8 +265,10 @@ def collect_metrics():
 					perc_valid_xml = (valid_xml / total_xml) *100
 
 		if do_output_sql or do_output_carbon or do_output_csv:
-			print '\n\tProcessed: %d\tValid: %d (%0.2f%%)\tInvalid: %d (%0.2f%%)' % (total_xml,valid_xml,perc_valid_xml,invalid_xml,perc_invalid_xml)
-		print '\t-- Sleeping for %d seconds (until %d)--' % (interval,nextTime)
+			if debug:
+				print '\n\tProcessed: %d\tValid: %d (%0.2f%%)\tInvalid: %d (%0.2f%%)' % (total_xml,valid_xml,perc_valid_xml,invalid_xml,perc_invalid_xml)
+		if debug:
+			print '\t-- Sleeping for %d seconds (until %d)--' % (interval,nextTime)
 		while nextTime > time.time():
 			time.sleep((nextTime-time.time()))
 
@@ -332,6 +339,7 @@ opts.epilog = ("Developed by @rmoff / Rittman Mead (http://www.rittmanmead.com) 
 opts.add_option("-o","--output",action="store",dest="outputformat",default="csv",help="The output format(s) of data, comma separated. More than one can be specified.\nUnparsed options: raw, xml\nParsed options: csv , carbon, sql")
 opts.add_option("-d","--data-directory",action="store",dest="DATA",default="./data",help="The directory to which data files are written. Not needed if sole output is carbon.")
 opts.add_option("-p","--parse-only",action="store_true",dest="parse_only",default=False, help="If specified, then all raw and xml files specified in the data-directory will be processed, and output to the specified format(s)\nSelecting this option will disable collection of metrics.")
+opts.add_option("-v","--verbose",action="store_true",dest="debug_on",default=False, help="Verbose output")
 opts.add_option("--fmw-instance",action="store",dest="FMW_INSTANCE",help="Optional. The name of a particular FMW instance. This will be prefixed to metric names.")
 opts.add_option("--carbon-server",action="store",dest="CARBON_SERVER",help="The host or IP address of the Carbon server. Required if output format 'carbon' specified.")
 opts.add_option("--carbon-port",action="store",dest="CARBON_PORT",default=2003,help="Alternative carbon port, if not 2003.")
@@ -344,6 +352,7 @@ try:
 	interval = int(input_opts.interval)
 	output=input_opts.outputformat
 	parse_only= input_opts.parse_only
+	debug = input_opts.debug_on
 	DATA = input_opts.DATA
 	FMW_INSTANCE = input_opts.FMW_INSTANCE
 	CARBON_SERVER = input_opts.CARBON_SERVER
