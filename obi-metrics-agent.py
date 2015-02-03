@@ -419,6 +419,10 @@ if not os.path.exists(DATA):
 	print '\n\t%s does not exist ... creating' % (DATA)
 	os.makedirs(DATA)
 
+if debug:
+	print '\n\nVerbose output enabled\n'
+else:
+	print 'N.B. Verbose output disabled. Pass -v or --verbose as a parameter to enabled detailed output.\n\nobi-metrics-agent will continue to run but no further console output will be shown.'
 # Check process list for collectl?
 # print '\n\n   **Don''t forget to start collectl**'
 
