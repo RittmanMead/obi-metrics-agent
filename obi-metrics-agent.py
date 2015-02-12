@@ -130,6 +130,7 @@ def parse_xml(xml):
 						metrics_list.append((metric_full_name, str(metric_value) , str(ts_epoch)))
 						metrics_msg.append(metric_out)
 		else :
+			print "\n--\n%s" % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(time.time())))
 			print ' *** PDML not recognised *** '
 			print ' Name in header : ' % (header_process_name)
 			return 3
@@ -137,6 +138,7 @@ def parse_xml(xml):
 
 	except Exception, err:
 		invalid_xml += 1
+		print "\n--\n%s" % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(time.time())))
 		sys.stderr.write('\t**Error parsing metric data: %s\n' % str(err))
 		try:
 			file = open('%s/invalid_files.txt' % (DATA),'a')
@@ -188,6 +190,7 @@ def parse_xml(xml):
 			except Exception, err:
 				sys.stderr.write('\t**Error writing SQL: %s\n' % str(err))
 	else:
+		print "\n--\n%s" % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(time.time())))
 		print '(No data - no action)'
 	return 0
 
@@ -240,6 +243,7 @@ def collect_metrics():
 				print '\tGet metrics for %s' % (component)
 			raw = get_metrics(cmd,filename)
 			if len(raw) < 100:
+				print "\n--\n%s" % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(thisTime)))
 				print '\n\t ** Output returned from opmn is unexpectedly short, is there a problem? Output follows: \n\t\t%s' % (raw)
 			if do_output_raw:
 				print '\t\t\tWritten raw output to %s' % (filename)
