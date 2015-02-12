@@ -222,6 +222,7 @@ def collect_metrics():
 			#sys.stderr.write('\nExiting : \n\t**OPMN is not running, so metrics cannot be collected\n')
 			#sys.exit()
 	except Exception, err:
+		print "\n--\n%s" % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(time.time())))
 		sys.stderr.write('\n\tcollect_metrics: Error calling OPMN \n%s\n' % str(err))
 		sys.exit()
 
