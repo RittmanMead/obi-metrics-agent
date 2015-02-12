@@ -217,8 +217,10 @@ def collect_metrics():
 		opmnout = p.stdout.read()
 		p.stdout.close()
 		if opmnout.find('opmn is not running')>-1:
-			sys.stderr.write('\nExiting : \n\t**OPMN is not running, so metrics cannot be collected\n')
-			sys.exit()
+			print "\n--\n%s" % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(time.time())))
+			sys.stderr.write('\n\t**OPMN is not running, so metrics cannot be collected\n')
+			#sys.stderr.write('\nExiting : \n\t**OPMN is not running, so metrics cannot be collected\n')
+			#sys.exit()
 	except Exception, err:
 		sys.stderr.write('\n\tcollect_metrics: Error calling OPMN \n%s\n' % str(err))
 		sys.exit()
