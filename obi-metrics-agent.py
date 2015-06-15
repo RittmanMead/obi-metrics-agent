@@ -2,7 +2,7 @@
 #
 # obi-metrics-agent.py
 #
-# @rmoff / March 2014
+# @rmoff / June 15, 2015
 # Inspired by Venkat's original java implementation
 #
 # ===================================================================
@@ -30,7 +30,7 @@
 #  obi-metrics-agent.py
 #
 # Pre-requisites : lxml
-#   sudo yum install libxml2-devel 
+#   sudo yum install libxml2-devel libxslt-devel python-devel
 #   sudo easy_install lxml
 #
 # To Do:
@@ -226,7 +226,9 @@ def collect_metrics():
 		sys.stderr.write('\n\tcollect_metrics: Error calling OPMN \n%s\n' % str(err))
 		sys.exit()
 
-	while True:
+	break_loop=False
+
+	while not break_loop:
 		thisTime = time.time()
 		nextTime = thisTime + interval
 		if debug:
@@ -278,6 +280,8 @@ def collect_metrics():
 			print '\t-- Sleeping for %d seconds (until %d)--' % (interval,nextTime)
 		while nextTime > time.time():
 			time.sleep((nextTime-time.time()))
+		if interval ==0 : 
+			break_loop=True
 
 def parse_files():
 	# How to express raw OR xml in a single regex? would need to cater for raw files and stripping header, but rest of code could be combined
@@ -350,7 +354,7 @@ opts.add_option("-v","--verbose",action="store_true",dest="debug_on",default=Fal
 opts.add_option("--fmw-instance",action="store",dest="FMW_INSTANCE",help="Optional. The name of a particular FMW instance. This will be prefixed to metric names.")
 opts.add_option("--carbon-server",action="store",dest="CARBON_SERVER",help="The host or IP address of the Carbon server. Required if output format 'carbon' specified.")
 opts.add_option("--carbon-port",action="store",dest="CARBON_PORT",default=2003,help="Alternative carbon port, if not 2003.")
-opts.add_option("-i","--interval",action="store",dest="interval",default=5,help="The interval in seconds between metric samples.")
+opts.add_option("-i","--interval",action="store",dest="interval",default=5,help="The interval in seconds between metric samples. Specify 0 for no loop (i.e. run once and exit)")
 opts.add_option("--opmnbin",action="store",dest="OPMN_BIN",help="The complete path to opmnctl. Watch out for spaces.")
 
 input_opts , args = opts.parse_args()
