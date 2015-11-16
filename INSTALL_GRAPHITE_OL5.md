@@ -74,7 +74,7 @@ Once Python 2.6 is available, `pip` is used to install required Python libraries
 	source /home/oracle/graphite/bin/activate
 	
 	# Install Python libraries
-	pip install django django-tagging 'Twisted<12.0' pyparsing pytz cairocffi
+	pip install django==1.6.2 django-tagging 'Twisted<12.0' pyparsing pytz cairocffi
 	
 	# Compile zope from source
 	mkdir /home/oracle/zope-src/

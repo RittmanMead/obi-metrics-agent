@@ -2,7 +2,7 @@
 #
 # obi-metrics-agent.py
 #
-# @rmoff / March 2014
+# @rmoff / June 15, 2015
 # Inspired by Venkat's original java implementation
 #
 # ===================================================================
@@ -30,7 +30,7 @@
 #  obi-metrics-agent.py
 #
 # Pre-requisites : lxml
-#   sudo yum install libxml2-devel 
+#   sudo yum install libxml2-devel libxslt-devel python-devel
 #   sudo easy_install lxml
 #
 # To Do:
@@ -130,6 +130,7 @@ def parse_xml(xml):
 						metrics_list.append((metric_full_name, str(metric_value) , str(ts_epoch)))
 						metrics_msg.append(metric_out)
 		else :
+			print "\n--\n%s" % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(time.time())))
 			print ' *** PDML not recognised *** '
 			print ' Name in header : ' % (header_process_name)
 			return 3
@@ -137,6 +138,7 @@ def parse_xml(xml):
 
 	except Exception, err:
 		invalid_xml += 1
+		print "\n--\n%s" % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(time.time())))
 		sys.stderr.write('\t**Error parsing metric data: %s\n' % str(err))
 		try:
 			file = open('%s/invalid_files.txt' % (DATA),'a')
@@ -148,14 +150,16 @@ def parse_xml(xml):
 
 	valid_xml += 1
 	# more output conditions here - reformat into CSV (easy) and INSERT statements (not so easy)
-	print '\t\t Processed : \t%d data values @ %s \t%s' % (len(metrics_msg),ts,header_process_name)
+	if debug:
+		print '\t\t Processed : \t%d data values @ %s \t%s' % (len(metrics_msg),ts,header_process_name)
 	if (len(metrics_msg) > 0) :
 		# Do something with the data
 		if do_output_csv:
 			csvline = '\n'.join(metrics_msg).replace(' ',',') + '\n'
 			csvfile = open('%s/metrics.csv' % (DATA),'a')
 			csvfile.write(csvline)
-			print '\t\t\tAppended CSV data to %s' % (csvfile.name)
+			if debug:
+				print '\t\t\tAppended CSV data to %s' % (csvfile.name)
 			csvfile.close()
 		if do_output_carbon:
 			try:
@@ -168,7 +172,8 @@ def parse_xml(xml):
 				#print 'Sending message to carbon server %s' % (CARBON_SERVER)
 				sock.sendall(carbon_message)
 				sock.close()
-				print '\t\t\tSent data to Carbon at %s' % (CARBON_SERVER)
+				if debug:
+					print '\t\t\tSent data to Carbon at %s' % (CARBON_SERVER)
 			except Exception, err:
 				sys.stderr.write('\t**Error sending data to Carbon: %s\n' % str(err))
 		if do_output_sql:
@@ -185,6 +190,7 @@ def parse_xml(xml):
 			except Exception, err:
 				sys.stderr.write('\t**Error writing SQL: %s\n' % str(err))
 	else:
+		print "\n--\n%s" % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(time.time())))
 		print '(No data - no action)'
 	return 0
 
@@ -211,17 +217,23 @@ def collect_metrics():
 		opmnout = p.stdout.read()
 		p.stdout.close()
 		if opmnout.find('opmn is not running')>-1:
-			sys.stderr.write('\nExiting : \n\t**OPMN is not running, so metrics cannot be collected\n')
-			sys.exit()
+			print "\n--\n%s" % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(time.time())))
+			sys.stderr.write('\n\t**OPMN is not running, so metrics cannot be collected\n')
+			#sys.stderr.write('\nExiting : \n\t**OPMN is not running, so metrics cannot be collected\n')
+			#sys.exit()
 	except Exception, err:
+		print "\n--\n%s" % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(time.time())))
 		sys.stderr.write('\n\tcollect_metrics: Error calling OPMN \n%s\n' % str(err))
 		sys.exit()
 
-	while True:
+	break_loop=False
+
+	while not break_loop:
 		thisTime = time.time()
 		nextTime = thisTime + interval
-		print '\n--Gather metrics--'
-		print "\tTime of sample: %s (%d)\n " % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(thisTime)),thisTime)
+		if debug:
+			print '\n--Gather metrics--'
+			print "\tTime of sample: %s (%d)\n " % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(thisTime)),thisTime)
 		for cmd in opmn_cmds:
 			component=cmd
 
@@ -232,9 +244,11 @@ def collect_metrics():
 # Need to make this cross-platform
 #				filename='/dev/shm/obimetric.tmp'
 				filename='%s/data.raw' % (DATA)
-			print '\tGet metrics for %s' % (component)
+			if debug:
+				print '\tGet metrics for %s' % (component)
 			raw = get_metrics(cmd,filename)
 			if len(raw) < 100:
+				print "\n--\n%s" % (time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(thisTime)))
 				print '\n\t ** Output returned from opmn is unexpectedly short, is there a problem? Output follows: \n\t\t%s' % (raw)
 			if do_output_raw:
 				print '\t\t\tWritten raw output to %s' % (filename)
@@ -260,10 +274,14 @@ def collect_metrics():
 					perc_valid_xml = (valid_xml / total_xml) *100
 
 		if do_output_sql or do_output_carbon or do_output_csv:
-			print '\n\tProcessed: %d\tValid: %d (%0.2f%%)\tInvalid: %d (%0.2f%%)' % (total_xml,valid_xml,perc_valid_xml,invalid_xml,perc_invalid_xml)
-		print '\t-- Sleeping for %d seconds (until %d)--' % (interval,nextTime)
+			if debug:
+				print '\n\tProcessed: %d\tValid: %d (%0.2f%%)\tInvalid: %d (%0.2f%%)' % (total_xml,valid_xml,perc_valid_xml,invalid_xml,perc_invalid_xml)
+		if debug:
+			print '\t-- Sleeping for %d seconds (until %d)--' % (interval,nextTime)
 		while nextTime > time.time():
 			time.sleep((nextTime-time.time()))
+		if interval ==0 : 
+			break_loop=True
 
 def parse_files():
 	# How to express raw OR xml in a single regex? would need to cater for raw files and stripping header, but rest of code could be combined
@@ -332,10 +350,11 @@ opts.epilog = ("Developed by @rmoff / Rittman Mead (http://www.rittmanmead.com) 
 opts.add_option("-o","--output",action="store",dest="outputformat",default="csv",help="The output format(s) of data, comma separated. More than one can be specified.\nUnparsed options: raw, xml\nParsed options: csv , carbon, sql")
 opts.add_option("-d","--data-directory",action="store",dest="DATA",default="./data",help="The directory to which data files are written. Not needed if sole output is carbon.")
 opts.add_option("-p","--parse-only",action="store_true",dest="parse_only",default=False, help="If specified, then all raw and xml files specified in the data-directory will be processed, and output to the specified format(s)\nSelecting this option will disable collection of metrics.")
+opts.add_option("-v","--verbose",action="store_true",dest="debug_on",default=False, help="Verbose output")
 opts.add_option("--fmw-instance",action="store",dest="FMW_INSTANCE",help="Optional. The name of a particular FMW instance. This will be prefixed to metric names.")
 opts.add_option("--carbon-server",action="store",dest="CARBON_SERVER",help="The host or IP address of the Carbon server. Required if output format 'carbon' specified.")
 opts.add_option("--carbon-port",action="store",dest="CARBON_PORT",default=2003,help="Alternative carbon port, if not 2003.")
-opts.add_option("-i","--interval",action="store",dest="interval",default=5,help="The interval in seconds between metric samples.")
+opts.add_option("-i","--interval",action="store",dest="interval",default=5,help="The interval in seconds between metric samples. Specify 0 for no loop (i.e. run once and exit)")
 opts.add_option("--opmnbin",action="store",dest="OPMN_BIN",help="The complete path to opmnctl. Watch out for spaces.")
 
 input_opts , args = opts.parse_args()
@@ -344,6 +363,7 @@ try:
 	interval = int(input_opts.interval)
 	output=input_opts.outputformat
 	parse_only= input_opts.parse_only
+	debug = input_opts.debug_on
 	DATA = input_opts.DATA
 	FMW_INSTANCE = input_opts.FMW_INSTANCE
 	CARBON_SERVER = input_opts.CARBON_SERVER
@@ -410,6 +430,10 @@ if not os.path.exists(DATA):
 	print '\n\t%s does not exist ... creating' % (DATA)
 	os.makedirs(DATA)
 
+if debug:
+	print '\n\nVerbose output enabled\n'
+else:
+	print 'N.B. Verbose output disabled. Pass -v or --verbose as a parameter to enabled detailed output.\n\nobi-metrics-agent will continue to run but no further console output will be shown.'
 # Check process list for collectl?
 # print '\n\n   **Don''t forget to start collectl**'
 

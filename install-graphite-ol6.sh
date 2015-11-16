@@ -12,7 +12,7 @@ virtualenv /home/oracle/graphite
 source /home/oracle/graphite/bin/activate
 
 # Install Python libraries
-pip install django django-tagging 'Twisted<12.0' pyparsing pytz cairocffi
+pip install django==1.6.2 django-tagging 'Twisted<12.0' pyparsing pytz cairocffi
 
 # Download and compile graphite and supporting components
 cd /home/oracle
@@ -114,6 +114,11 @@ EOF
 # The initial_data.json is read from $PWD (or /home/oracle/graphite/lib/python2.6/site-packages/django/contrib/auth/fixtures but that wouldn't be right)
 cd /home/oracle/graphite/lib/
 PYTHONPATH=/home/oracle/graphite/lib/ /home/oracle/graphite/bin/django-admin.py syncdb --noinput --settings=graphite.settings --verbosity=3
+# Set up the static content files
+# RNM 20141119 - this is a hack, not sure if it's the proper way to do it
+cd /home/oracle/graphite
+cp -r webapp/content lib
+PYTHONPATH=/home/oracle/graphite/lib/ /home/oracle/graphite/bin/django-admin.py collectstatic --noinput --settings=graphite.settings
 
 # Start Apache
 

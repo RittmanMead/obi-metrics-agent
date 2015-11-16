@@ -12,7 +12,9 @@ Regardless of the method chosen, there are some important assumptions made:
 **To download and run the automagic install script**, enter: 
 
 	wget --no-check-certificate https://raw.github.com/RittmanMead/obi-metrics-agent/master/install-ol6.sh
+	wget --no-check-certificate https://raw.github.com/RittmanMead/obi-metrics-agent/master/install-graphite-ol6.sh
 	chmod u+x ./install-ol6.sh
+	chmod u+x ./install-graphite-ol6.sh
 	./install-ol6.sh
 	
 This will do all the necessary setup for graphite. It will take about five minutes to run. Once complete, go to `http://<server>` in your web browser to see the initial graphite page. 
@@ -47,7 +49,7 @@ Once the Python environment is set up, `pip` is used to install required Python 
 	source /home/oracle/graphite/bin/activate
 	
 	# Install Python libraries
-	pip install django django-tagging 'Twisted<12.0' pyparsing pytz cairocffi
+	pip install django==1.6.2 django-tagging 'Twisted<12.0' pyparsing pytz cairocffi
 
 ## Download and compile graphite and supporting components
 
@@ -165,6 +167,13 @@ If it's not, check in `/home/oracle/graphite/storage/log/carbon-cache/carbon-cac
 	# The initial_data.json is read from $PWD (or /home/oracle/graphite/lib/python2.6/site-packages/django/contrib/auth/fixtures but that wouldn't be right)
 	cd /home/oracle/graphite/lib/
 	PYTHONPATH=/home/oracle/graphite/lib/ /home/oracle/graphite/bin/django-admin.py syncdb --noinput --settings=graphite.settings --verbosity=3
+
+	# Set up the static content files
+	# RNM 20141119 - this is a hack, not sure if it's the proper way to do it
+	cd /home/oracle/graphite
+	cp -r webapp/content lib
+	PYTHONPATH=/home/oracle/graphite/lib/ /home/oracle/graphite/bin/django-admin.py collectstatic --noinput --settings=graphite.settings
+
 
 ## Start Apache
 
