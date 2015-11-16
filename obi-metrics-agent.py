@@ -128,7 +128,6 @@ for table in results:
 if outputFormat=='Carbon':
 	s.close()
 if outputFormat=='InfluxDB':
-	print 'TODO: Batch InfluxDB requests into single send'
-	print '(currently fails to send)'
+	print 'TODO: Batch InfluxDB requests into single send - currently done one by one which is inefficient'
 	#conn = httplib.HTTPConnection('%s:%s' % (targetHost,targetPort))
 	#a=conn.request("POST", ("/write?db=%s" % targetDB), influx_msgs)
