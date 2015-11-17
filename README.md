@@ -20,9 +20,16 @@ It's written to run under a scheduler such as crontab, and so will launch, colle
 
 ## Setup
 
-1. Provision your data store (eg InfluxDB). If using InfluxDB, create a database to hold the metrics 
+1. Provision your data store (InfluxDB or Carbon). 
 
-		curl -G GET 'http://localhost:8086/query' --data-urlencode "q=CREATE DATABASE obi"
+	* I would recommend [InfluxDB](https://influxdb.com). It is very easy to get setup. 
+
+		1. [Download](https://influxdb.com/download/index.html#) and install 
+		2. Create a database to hold the metrics 
+
+			curl -G GET 'http://localhost:8086/query' --data-urlencode "q=CREATE DATABASE obi"
+
+	* You can also use any system that accepts carbon protocol (eg Graphite)
 
 2. Run obi-metrics-agent.py to check everything works: 
 
@@ -32,7 +39,10 @@ It's written to run under a scheduler such as crontab, and so will launch, colle
 
 		0-59 * * * * /app/oracle/biee/oracle_common/common/bin/wlst.sh ~/obi-metrics-agent.py weblogic Admin123 t3://localhost:7001 2>/dev/null
 
+4. Get [Grafana](http://grafana.org/download/) and build cool dashboards. 
+
 ## TODO
 
 Better documentation ;)
+Add quick Grafana overview.
 Plus the stuff listed in the header of obi-metrics-agent.py itself
