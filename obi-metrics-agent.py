@@ -11,6 +11,7 @@
 #
 # TODO: 
 #   - Document use
+#   - Add debug flag
 #   - Better command line argument handling (use getopt?)
 #   - Add option to repeat loop with sleep, so that can be called from crontab every minute and capture stats at a greater frequency than minute (eg launch with interval of 10, samples 5, to take five samples and then sleep)
 #   - Error handling
