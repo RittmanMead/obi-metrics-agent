@@ -17,6 +17,7 @@
 #   - Get InfluxDB output working as a batch
 #   - Make the wlst call not echo to stdout
 #   - For writing to InfluxDB, test if the DB exists already and if not create it
+#   - Add output to Elasticsearch?
 #
 
 import calendar, time
