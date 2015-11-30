@@ -10,7 +10,7 @@
 # 0-59 * * * * /app/oracle/biee/oracle_common/common/bin/wlst.sh ~/obi-metrics-agent.py weblogic Admin123 t3://localhost:7001 2>/dev/null 1>&2
 #
 # TODO: 
-#   - Current_Queued_Requests - are we getting all the metadata necessary for this? (c.f. Thread pool vs connection pool)
+#   - Document use
 #   - Add debug flag
 #   - Better command line argument handling (use getopt?)
 #   - Add option to repeat loop with sleep, so that can be called from crontab every minute and capture stats at a greater frequency than minute (eg launch with interval of 10, samples 5, to take five samples and then sleep)
@@ -18,7 +18,6 @@
 #   - Get InfluxDB output working as a batch
 #   - Make the wlst call not echo to stdout
 #   - For writing to InfluxDB, test if the DB exists already and if not create it
-#   - Add output to Elasticsearch?
 #
 
 import calendar, time
