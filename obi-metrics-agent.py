@@ -105,9 +105,12 @@ for table in results:
 		keyIter = keys.iterator()
 		inst_name= row.get('Name').replace(' ','-')
 		try:
-			server= row.get('Servername').replace(' ','-')
+			server= row.get('Servername').replace(' ','-').replace('/','_')
 		except:
-			server=''
+			try:
+				server= row.get('ServerName').replace(' ','-').replace('/','_')
+			except:
+				server='unknown'
 		try:
 			host= row.get('Host').replace(' ','-')
 		except:
@@ -117,18 +120,55 @@ for table in results:
 			value = row.get(columnName )
 			if columnName.find('.value')>0:
 				metric_name=columnName.replace('.value','')
-				if outputFormat=='Carbon':
-					carbon_msg= ('%s.%s.%s.%s.%s %s %s') % (host,tableName,inst_name, server,metric_name, value,now_epoch)
-					s.send(carbon_msg)
-					#print carbon_msg
-				if outputFormat=='InfluxDB':
-					influx_msg= ('%s,server=%s,host=%s,metric_group=%s,metric_instance=%s value=%s %s') % (metric_name,server,host,tableName,inst_name,  value,now_epoch*1000000)
-					influx_msgs+='\n%s' % influx_msg
-					conn = httplib.HTTPConnection('%s:%s' % (targetHost,targetPort))
-					a=conn.request("POST", ("/write?db=%s" % targetDB), influx_msg)
+				if value is not None: 
+					if outputFormat=='Carbon':
+						carbon_msg= ('%s.%s.%s.%s.%s %s %s') % (host,tableName,inst_name, server,metric_name, value,now_epoch)
+						s.send(carbon_msg)
+						#print carbon_msg
+					if outputFormat=='InfluxDB':
+						influx_msg= ('%s,server=%s,host=%s,metric_group=%s,metric_instance=%s value=%s %s') % (metric_name,server,host,tableName,inst_name,  value,now_epoch*1000000)
+						influx_msgs+='\n%s' % influx_msg
+						conn = httplib.HTTPConnection('%s:%s' % (targetHost,targetPort))
+						## TODO pretty sure should be urlencoding this ...
+						a=conn.request("POST", ("/write?db=%s" % targetDB), influx_msg)
+						r=conn.getresponse()
+						if r.status != 204:
+							print 'Failed to send to InfluxDB! Error %s Reason %s' % (r.status,r.reason)
+							print influx_msg
+							#sys.exit(2)
+				else:
+					print 'Skipping None value %s,server=%s,host=%s,metric_group=%s,metric_instance=%s value=%s %s' % (metric_name,server,host,tableName,inst_name,  value,now_epoch*1000000)
 if outputFormat=='Carbon':
 	s.close()
 if outputFormat=='InfluxDB':
 	print 'TODO: Batch InfluxDB requests into single send - currently done one by one which is inefficient'
 	#conn = httplib.HTTPConnection('%s:%s' % (targetHost,targetPort))
 	#a=conn.request("POST", ("/write?db=%s" % targetDB), influx_msgs)
+
+# Tidy the /tmp folder -- for some reason wlst dumps in here and doesn't clear it up
+# NB if you have other stuff called wlst_module in /tmp ... you might want to disable this section.
+#import os, time, sys
+#now = time.time()
+#path ='/tmp'
+
+#from glob import glob
+#for f in glob('/tmp/wlst_module*.py'):
+ # f = os.path.join(path, f)
+ # # If it's older than a day:
+ # if os.stat(f).st_mtime < now - 1 * 86400:
+ #   if os.path.isfile(f):
+   #   os.remove(f)
+#
+# or do a crontab: 
+#
+
+#---
+# When WLST is called, it dumps scrap into /tmp which doesn't get cleared up
+# It also creates a blank log file in FMW_HOME/logs.
+# Since we're calling WLST very frequently it's only polite to keep things tidy
+# Once a day, clear down the WLST-related tmp files that haven't been accessed for two days
+# rmoff/RittmanMead Dec 2015
+#0 0 * * * find /tmp -name "wlst_module*.py" -atime +2|xargs -Ifoo rm foo
+#0 0 * * * find /app/oracle/biee/logs -name "wlst*.log" -mtime +2|xargs -Ifoo rm foo
+
+
