@@ -22,9 +22,9 @@
 #   /oracle/FMW_UAT/instances/instances1/[...]
 #------------------------------------------------------------------------------------------------
 
-OUTBASE=/var/log/obiee.tmp
+OUTBASE=/tmp/obiee.tmp
 #OUTBASE=~/Downloads/obiee.nqs_tmp
-FMW_BASE=/oracle
+FMW_BASE=/app/oracle
 #FMW_BASE=/Users/rmoff/git/obiee_monitor_obis_temp/testing/oracle
 INTERVAL=10
 LEVEL=1
@@ -38,8 +38,8 @@ function monitor_obis_temp() {
   while [ 1 -eq 1 ]; do
     if [[ $LEVEL -ge 1 ]]; then
         echo -e $1'\t'$(date +%s)'\t'$(date)'\tOracleBIServerComponent\t'$(du $FMW_HOME/instances/instance1/tmp/OracleBIServerComponent/coreapplication_obis1/obis_temp|awk '{print $1}') >> $OUTBASE.du.tsv
-        echo -e $1'\t'$(date +%s)'\t'$(date)'\tOracleBIJavaHostComponent\t'$(du $FMW_HOME/instances/instance1/tmp/OracleBIJavaHostComponent/coreapplication_obis1/obis_temp|awk '{print $1}') >> $OUTBASE.du.tsv
-        echo -e $1'\t'$(date +%s)'\t'$(date)'\tOracleBIPresentationServicesComponent\t'$(du $FMW_HOME/instances/instance1/tmp/OracleBIPresentationServicesComponent/coreapplication_obis1/obis_temp|awk '{print $1}') >> $OUTBASE.du.tsv
+        echo -e $1'\t'$(date +%s)'\t'$(date)'\tOracleBIJavaHostComponent\t'$(du $FMW_HOME/instances/instance1/tmp/OracleBIJavaHostComponent/coreapplication_obijh1/obis_temp|awk '{print $1}') >> $OUTBASE.du.tsv
+        echo -e $1'\t'$(date +%s)'\t'$(date)'\tOracleBIPresentationServicesComponent\t'$(du $FMW_HOME/instances/instance1/tmp/OracleBIPresentationServicesComponent/coreapplication_obips1/obis_temp|awk '{print $1}') >> $OUTBASE.du.tsv
     fi
     if [[ $LEVEL -ge 2 ]]; then
         echo -e $1'\t'$(date +%s)'\t'$(date)'\t'$(df $FMW_HOME/instances/instance1/tmp/OracleBIServerComponent/coreapplication_obis1/obis_temp|tail -n1) >> $OUTBASE.df.tsv
