@@ -33,13 +33,13 @@ LEVEL=1
 function monitor_obis_temp() {
   FMW_HOME=$FMW_BASE/$1
   OUTBASE=$OUTBASE.$1
-  echo "Writing diagnostics for BI Server temp in $FMW_HOME to $OUTBASE every $INTERVAL seconds, level $LEVEL (1=space used, 2=plus filesystems, 3=plus list of contents"
+  echo "Writing diagnostics for BI Server temp in $FMW_HOME to $OUTBASE every $INTERVAL seconds, level $LEVEL (1=space used, 2=plus filesystems, 3=plus list of contents)"
 
   while [ 1 -eq 1 ]; do
     if [[ $LEVEL -ge 1 ]]; then
         echo -e $1'\t'$(date +%s)'\t'$(date)'\tOracleBIServerComponent\t'$(du $FMW_HOME/instances/instance1/tmp/OracleBIServerComponent/coreapplication_obis1/obis_temp|awk '{print $1}') >> $OUTBASE.du.tsv
-        echo -e $1'\t'$(date +%s)'\t'$(date)'\tOracleBIJavaHostComponent\t'$(du $FMW_HOME/instances/instance1/tmp/OracleBIJavaHostComponent/coreapplication_obijh1/obis_temp|awk '{print $1}') >> $OUTBASE.du.tsv
-        echo -e $1'\t'$(date +%s)'\t'$(date)'\tOracleBIPresentationServicesComponent\t'$(du $FMW_HOME/instances/instance1/tmp/OracleBIPresentationServicesComponent/coreapplication_obips1/obis_temp|awk '{print $1}') >> $OUTBASE.du.tsv
+        echo -e $1'\t'$(date +%s)'\t'$(date)'\tOracleBIJavaHostComponent\t'$(du $FMW_HOME/instances/instance1/tmp/OracleBIJavaHostComponent/coreapplication_obijh1/|awk '{print $1}') >> $OUTBASE.du.tsv
+        echo -e $1'\t'$(date +%s)'\t'$(date)'\tOracleBIPresentationServicesComponent\t'$(du $FMW_HOME/instances/instance1/tmp/OracleBIPresentationServicesComponent/coreapplication_obips1/|awk '{print $1}') >> $OUTBASE.du.tsv
     fi
     if [[ $LEVEL -ge 2 ]]; then
         echo -e $1'\t'$(date +%s)'\t'$(date)'\t'$(df $FMW_HOME/instances/instance1/tmp/OracleBIServerComponent/coreapplication_obis1/obis_temp|tail -n1) >> $OUTBASE.df.tsv
