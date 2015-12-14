@@ -28,6 +28,7 @@ def printUsage():
 
   --temp		Get OBIEE Temp usage on disk by component
   --fmwHome		Fusion Middleware Home folder. Mandatory if collection temp stats. Not required otherwise.
+  --fmwEnvLabel		Fusion Middleware environment label. Useful when multiple installations per server. Optional.
   --fmwInstance		Fusion Middleware instance. Used for temp stats monitoring. Defaults to instance1
 
   --dms			Get DMS metrics
@@ -55,6 +56,7 @@ influx_db='obi'
 es_port=9200
 es_index='obi'
 fmwHome=None
+fmwEnvLabel=None
 wls_admin=None
 wls_pw=None
 stdout=None
@@ -62,7 +64,7 @@ influx_host=None
 es_host=None
 
 try:
-	options,remainder = getopt.getopt(sys.argv[1:],'', ['dms', 'temp', 'fmwHome=', 'env-label=','wls-admin=', 'wls-pw=', 'wls-url=', 'stdout=', 'influx-host=', 'influx-port=', 'influx-db=', 'es-host=', 'es-port=', 'es-index=','debug'])
+	options,remainder = getopt.getopt(sys.argv[1:],'', ['dms', 'temp', 'fmwHome=','fmwEnvLabel=', 'env-label=','wls-admin=', 'wls-pw=', 'wls-url=', 'stdout=', 'influx-host=', 'influx-port=', 'influx-db=', 'es-host=', 'es-port=', 'es-index=','debug'])
 except getopt.error, msg:
 	printUsage()
 	print '**\n**\t%s\n\n' % msg
@@ -77,6 +79,8 @@ for opt, arg in options:
 		debug=True
 	elif opt == '--temp':
 		do_temp=True
+	elif opt == '--fmwEnvLabel':
+		fmwEnvLabel=arg
 	elif opt == '--fmwHome':
 		fmwHome=arg
 	elif opt == '--wls-admin':
