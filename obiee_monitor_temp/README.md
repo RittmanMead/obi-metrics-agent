@@ -12,6 +12,10 @@ One output file will be written per FMW installation. The assumption is that the
 
 Edit the files as follows: 
 
+## init.d
+
+* If using an OS user other than `oracle`, update the `su` command to use this user instead
+
 ## obiee_monitor_temp.sh
 
 * Set `FMW_BASE` to the parent folder of all FMW installs, eg, `/oracle`
@@ -48,5 +52,7 @@ Once updated, run this whole SQL script to create the base table and dependent v
 
 ## Usage
 
-* Copy `obiee_monitor_temp.sh` to `/etc/init.d` and run `chkconfig obiee_monitor_temp on`
+* Copy `init.d` to `/etc/init.d/obiee_monitor_temp` and run `chkconfig obiee_monitor_temp on`
 * Schedule a minutely crontab to call `obiee_monitor_temp_load_table.sh` for each environment
+
+	0-59 * * * * /opt/obi-metrics-agent/obiee_monitor_temp/obiee_monitor_temp_load_table.sh 2>/dev/null 1>&2
