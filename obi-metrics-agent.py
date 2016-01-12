@@ -34,7 +34,7 @@ if argLen -1 < 2:
  	print '$FMW_HOME/oracle_common/common/bin/wlst.sh obi-metrics-agent.py  <AdminUserName> <AdminPassword> [<AdminServer_t3_url>] [<Carbon|InfluxDB>] [<target host>] [<target port>] [targetDB influx db>'
 	exit()
 
-outputFormat='InfluxDB'
+outputFormat='CSV'
 url='t3://localhost:7001'
 targetHost='localhost'
 targetDB='obi'
@@ -91,6 +91,9 @@ if outputFormat=='InfluxDB':
 	import httplib
 	influx_msgs=''
 
+if outputFormat=='CSV':
+	csv_file = open('/tmp/obiee_dms.csv','a')
+
 connect(wls_user,wls_pw,url)
 results = displayMetricTables('Oracle_BI*','dms_cProcessInfo')
 for table in results:
@@ -121,6 +124,9 @@ for table in results:
 			if columnName.find('.value')>0:
 				metric_name=columnName.replace('.value','')
 				if value is not None: 
+					if outputFormat=='CSV':
+						csv_msg= ('%s,%s,%s,%s,%s,%s,%s\n') % (host,tableName,inst_name, server,metric_name, value,now_epoch)
+						csv_file.write(csv_msg)
 					if outputFormat=='Carbon':
 						carbon_msg= ('%s.%s.%s.%s.%s %s %s') % (host,tableName,inst_name, server,metric_name, value,now_epoch)
 						s.send(carbon_msg)
@@ -145,6 +151,8 @@ if outputFormat=='InfluxDB':
 	#conn = httplib.HTTPConnection('%s:%s' % (targetHost,targetPort))
 	#a=conn.request("POST", ("/write?db=%s" % targetDB), influx_msgs)
 
+if outputFormat=='CSV':
+	csv_file.close()
 # Tidy the /tmp folder -- for some reason wlst dumps in here and doesn't clear it up
 # NB if you have other stuff called wlst_module in /tmp ... you might want to disable this section.
 #import os, time, sys
