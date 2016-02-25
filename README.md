@@ -14,7 +14,7 @@ It works with OBIEE 11g and 12c. It runs natively under WLST (which ships with O
 
 ## Overview
 
-This application is written in Jython, to run under WLST. It will pull out all the OBIEE DMS metrics, and output them. Currently supported outputs are in Carbon/Graphite format, or native InfluxDB. Modifying the script to dump out CSV etc is trivial if you want to do so.
+This application is written in Jython, to run under WLST. It will pull out all the OBIEE DMS metrics, and output them. Currently supported outputs are to file (CSV) or sent to Carbon/Graphite, or native InfluxDB. 
 
 It's written to run under a scheduler such as crontab, and so will launch, collect metrics, and exit again.
 
